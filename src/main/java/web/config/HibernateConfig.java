@@ -18,11 +18,13 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Objects;
 import java.util.Properties;
 
 @Configuration
-@PropertySource("classpath:db.properties")
 @ComponentScan("web")
 @EnableTransactionManagement
 public class HibernateConfig {
@@ -37,11 +39,16 @@ public class HibernateConfig {
     @Bean
     public DataSource getDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("db.driver"));
-        dataSource.setUrl(env.getProperty("db.url"));
-        dataSource.setUsername(env.getProperty("db.username"));
-        dataSource.setPassword(env.getProperty("db.password"));
+        dataSource.setDriverClassName(Objects.requireNonNull(env.getProperty("com.mysql.cj.jdbc.Driver")));
+        dataSource.setUrl(env.getProperty("jdbc:mysql://localhost:3306/testdata"));
+        dataSource.setUsername(env.getProperty("root"));
+        dataSource.setPassword(env.getProperty("007707"));
         return dataSource;
+    }
+
+    @Bean
+    public EntityManager makeEntityManager(EntityManagerFactory entityManagerFactory) {
+        return entityManagerFactory.createEntityManager();
     }
 
 
@@ -49,12 +56,12 @@ public class HibernateConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory()  {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setDataSource(getDataSource());
-        factoryBean.setPackagesToScan(env.getRequiredProperty("db.entity.package"));
+        factoryBean.setPackagesToScan(env.getRequiredProperty("web.model"));
         factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         Properties props = new Properties();
-        props.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
-        props.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
+        props.put("hibernate.show_sql", env.getProperty("true"));
+        props.put("hibernate.hbm2ddl.auto", env.getProperty("update"));
         props.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
         factoryBean.setJpaProperties(props);
         return factoryBean;
