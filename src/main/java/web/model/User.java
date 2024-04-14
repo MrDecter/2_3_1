@@ -82,6 +82,6 @@ public class User {
                 ", Имя: " + name +
                 ", Фамилия: " + lastname +
                 ", Возраст: " + age +
-                ", ПолЖ " + gender;
+                ", Пол: " + gender;
     }
 }
