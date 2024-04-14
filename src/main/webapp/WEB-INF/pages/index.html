@@ -8,6 +8,9 @@
     <title>Все пользователи</title>
 </head>
 <body>
+
+<div>
+    <p class="h2 text-center" style="padding-top: 100px">Список пользователей</p>
     <div class="position-absolute top-50 start-50 translate-middle border-bottom border-top" style="padding: 50px">
         <table class="table">
             <thead>
@@ -30,16 +33,14 @@
                     <td th:utext="${user.getGender()}"></td>
                 </div>
                 <td>
-                    <button class="btn btn-outline-secondary btn-sm">Изменить</button>
-                    <button class="btn btn-outline-danger btn-sm">Удалить</button>
+                    <a th:href="'/edit?id='+${user.id}"><button class="btn btn-outline-success btn-sm" >Изменить</button></a>
+                    <a th:href="'/deleteUser?id='+${user.id}"><button class="btn btn-outline-danger btn-sm">Удалить</button></a>
                 </td>
             </tr>
-
             </tbody>
         </table>
-        <button class="btn btn-primary" >Добавить пользователя</button>
+        <button class="btn btn-primary" onclick="window.location.href = '/add'" >Добавить пользователя</button>
     </div>
-
-
+</div>
 </body>
 </html>
